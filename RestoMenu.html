@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-5">
+    <div class="max-w-3xl mx-auto p-10 bg-white shadow-xl rounded-lg">
+        <h1 class="text-4xl font-bold text-center text-brown-900 mb-8">Our Menu</h1>
+
+        <!-- Drinks -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-brown-900 border-b-2 border-gray-300 pb-2 mb-4">Espresso & Coffee</h2>
+            <button type="button" class="bg-black text-white rounded-full w-10 h-10 text-xl transition-transform transform hover:scale-110" onclick="plusButtonDrinks()">+</button>
+            <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5" id="drinks-items"></ul>
+        </section>
+
+        <!-- Croissants -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-brown-900 border-b-2 border-gray-300 pb-2 mb-4">Croissant Delights</h2>
+            <button type="button" class="bg-black text-white rounded-full w-10 h-10 text-xl transition-transform transform hover:scale-110" onclick="plusButtonSandwiches()">+</button>
+            <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5" id="sandwiches-items"></ul>
+        </section>
+
+        <section class="hidden" id="add-item">
+            <button class="absolute top-4 right-4 text-white bg-red-600 rounded-full w-10 h-10 flex items-center justify-center transition-transform transform hover:scale-110" onclick="exitForm()">✖</button>
+            <h1 class="text-3xl font-bold mb-4">Add Item</h1>
+
+            <div class="grid grid-cols-1 gap-4 mb-4">
+                <div>
+                    <label class="block text-gray-700">Category</label>
+                    <input type="text" class="w-full p-3 border rounded focus:outline-none focus:ring focus:ring-brown-500" id="category" placeholder="Enter category (drinks or sandwiches)" />
+                </div>
+                <div>
+                    <label class="block text-gray-700">Add Items</label>
+                    <input type="file" id="image-upload" name="imageUpload" class="hidden"/>
+                    <label for="image-upload" class="inline-block bg-gray-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-gray-700">Upload Image</label>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-gray-700">Item Name</label>
+                    <input type="text" class="w-full p-3 border rounded focus:outline-none focus:ring focus:ring-brown-500" id="itemName" placeholder="Enter item name" />
+                </div>
+                <div>
+                    <label class="block text-gray-700">Item Price</label>
+                    <input type="text" class="w-full p-3 border rounded focus:outline-none focus:ring focus:ring-brown-500" id="itemPrice" placeholder="Enter item price" />
+                </div>
+            </div>
+
+            <label class="block text-gray-700">Item Details</label>
+            <textarea class="w-full p-3 border rounded focus:outline-none focus:ring focus:ring-brown-500 mb-4" id="itemDetails" placeholder="Enter item details" rows="3"></textarea>
+
+            <button class="bg-black text-white px-6 py-2 rounded shadow transition-transform transform hover:scale-105 hover:shadow-lg" onclick="addItemButtonClicked()">Add Item</button>
+        </section>
+    </div>
+
+    <script>
+        // Your existing JavaScript code remains unchanged
+        let drinksForm = document.getElementById("drinks-form");
+        let sandwichesForm = document.getElementById("sandwiches-form");
+        let addItem = document.getElementById("add-item");
+        let addedImage = document.getElementById("image-upload");
+
+        let addedCategory = document.getElementById("category");
+        let addedItemPrice = document.getElementById("itemPrice");
+        let addedItemName = document.getElementById("itemName");
+        let addedItemDetails = document.getElementById("itemDetails");
+
+        let drinksArray = [
+            {
+                image: "pexels-chevanon-312418.jpg",
+                name: "Espresso",
+                price: "2.50",
+                details: "Strong, rich coffee",
+            },
+            {
+                image: "pexels-chevanon-302891.jpg",
+                name: "Latte",
+                price: "3.50",
+                details: "Smooth coffee with milk",
+            },
+            {
+                image: "icecoffee.jpg",
+                name: "Iced Coffee",
+                price: "3.00",
+                details: "Chilled coffee with ice",
+            },
+        ];
+
+        let sandwichesArray = [
+            {
+                image: "pexels-jamalyahyayev-14519311.jpg",
+                name: "Butter Croissant",
+                price: "3.50",
+                details: "Butter, flour, yeast, sugar, salt, and milk",
+            },
+            {
+                image: "pexels-alpyildizlar-14982155.jpg",
+                name: "Cheese Croissant",
+                price: "4.50",
+                details: "Butter, flour, yeast, sugar, salt, milk, cheddar cheese.",
+            },
+            {
+                image: "pexels-raymond-petrik-1448389535-26832683.jpg",
+                name: "Almond Croissant",
+                price: "4.75",
+                details: "Butter, flour, yeast, sugar, salt, milk, almond paste, sliced almonds.",
+            },
+        ];
+
+        function renderItems() {
+            const drinksItems = document.getElementById("drinks-items");
+            const sandwichesItems = document.getElementById("sandwiches-items");
+
+            drinksItems.innerHTML = drinksArray
+                .map(
+                    (item) => `
+                        <li class="bg-white rounded-lg shadow-md p-4 transition-transform transform hover:scale-105">
+                            <span class="block mb-2">
+                                <img src="${item.image}" alt="${item.name}" class="w-24 h-24 rounded-full mx-auto">
+                            </span>
+                            <span class="block text-lg font-semibold text-brown-900">${item.name}</span>
+                            <span class="block text-md text-green-600 font-bold">$${item.price}</span>
+                            <p class="text-gray-700">${item.details}</p>
+                        </li>
+                    `
+                )
+                .join("");
+
+            sandwichesItems.innerHTML = sandwichesArray
+                .map(
+                    (item) => `
+                        <li class="bg-white rounded-lg shadow-md p-4 transition-transform transform hover:scale-105">
+                            <span class="block mb-2">
+                                <img src="${item.image}" alt="${item.name}" class="w-24 h-24 rounded-full mx-auto">
+                            </span>
+                            <span class="block text-lg font-semibold text-brown-900">${item.name}</span>
+                            <span class="block text-md text-green-600 font-bold">$${item.price}</span>
+                            <p class="text-gray-700">${item.details}</p>
+                        </li>
+                    `
+                )
+                .join("");
+        }
+
+        function plusButtonDrinks() {
+            addItem.classList.remove("hidden");
+            sandwichesForm.classList.add("hidden");
+            drinksForm.classList.add("hidden");
+        }
+
+        function plusButtonSandwiches() {
+            addItem.classList.remove("hidden");
+            sandwichesForm.classList.add("hidden");
+            drinksForm.classList.add("hidden");
+        }
+
+        function exitForm() {
+            addItem.classList.add("hidden");
+            sandwichesForm.classList.remove("hidden");
+            drinksForm.classList.remove("hidden");
+        }
+
+        function addItemButtonClicked() {
+            const category = addedCategory.value.toLowerCase();
+            const itemPrice = addedItemPrice.value;
+            const itemName = addedItemName.value;
+            const itemDetails = addedItemDetails.value;
+            const file = addedImage.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (event) {
+                    const newItem = {
+                        image: event.target.result,
+                        name: itemName,
+                        price: itemPrice,
+                        details: itemDetails,
+                    };
+
+                    if (category === "drinks") {
+                        drinksArray.push(newItem);
+                    } else if (category === "sandwiches") {
+                        sandwichesArray.push(newItem);
+                    }
+
+                    renderItems();
+                    exitForm();
+                    addedCategory.value = "";
+                    addedItemPrice.value = "";
+                    addedItemName.value = "";
+                    addedItemDetails.value = "";
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                alert("Please upload an image");
+            }
+        }
+
+        // Initial render
+        renderItems();
+    </script>
+</body>
+</html>
